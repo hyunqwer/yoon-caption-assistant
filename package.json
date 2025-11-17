@@ -1,0 +1,21 @@
+{
+  "name": "yoonsaeng-caption-assistant",
+  "version": "1.0.0",
+  "description": "윤선생 인스타그램 캡션 어시스턴트 with GPT-4",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site - no build required'",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "openai": "^4.20.1"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.0.0"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
