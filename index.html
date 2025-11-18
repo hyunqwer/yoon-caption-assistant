@@ -1113,27 +1113,53 @@
                 document.getElementById('resultSection').classList.remove('hidden');
             }
 
-            copyCaption(version) {
-                const captionContent = document.getElementById(`caption${version}_content`).innerText;
-                const hashtags = document.getElementById(`caption${version}_hashtags`).innerText;
-                const fullText = captionContent + '\n\n' + hashtags;
+// 캡션 복사 (클립보드 API + Fallback)
+async copyCaption(version) {
+    const captionContent = document.getElementById(`caption${version}_content`).innerText;
+    const hashtags = document.getElementById(`caption${version}_hashtags`).innerText;
+    const fullText = captionContent + '\n\n' + hashtags;
 
-                navigator.clipboard.writeText(fullText).then(() => {
-                    const button = event.target;
-                    const originalText = button.textContent;
-                    button.textContent = '복사됨! ✅';
-                    button.style.background = '#218838';
-                    
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.style.background = '#28a745';
-                    }, 2000);
-                }).catch(err => {
-                    console.error('복사 실패:', err);
-                    alert('복사에 실패했습니다. 수동으로 복사해주세요.');
-                });
-            }
+    // 버튼 요소 가져오기 (event가 없을 수도 있으니 보완)
+    const button = (typeof event !== 'undefined' && event.target) 
+        ? event.target 
+        : document.activeElement;
 
+    const showSuccessUI = () => {
+        if (!button) return;
+        const originalText = button.textContent;
+        button.textContent = '복사됨! ✅';
+        button.style.background = '#218838';
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.style.background = '#28a745';
+        }, 2000);
+    };
+
+    try {
+        // 1) 최신 클립보드 API (HTTPS & 지원 브라우저)
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(fullText);
+        } else {
+            // 2) Fallback: textarea + execCommand
+            const textarea = document.createElement('textarea');
+            textarea.value = fullText;
+            textarea.style.position = 'fixed';
+            textarea.style.top = '-9999px';
+            textarea.style.left = '-9999px';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+
+        showSuccessUI();
+    } catch (err) {
+        console.error('복사 실패:', err);
+        alert('복사에 실패했습니다. 수동으로 복사해주세요.');
+    }
+}
             restart() {
                 this.currentStep = 1;
                 this.userData = { step1: {}, details: {}, style: {}, special: {} };
