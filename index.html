@@ -352,7 +352,11 @@
             background: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;          /* 가운데가 아니라 위에 붙이기 */
+            padding: 20px 10px;               /* 위·아래 여백 */
+
+            overflow-y: auto;                 /* 🔑 팝업 영역 안에서 세로 스크롤 허용 */
+            -webkit-overflow-scrolling: touch;/* iOS에서 부드러운 스크롤 */            
             z-index: 1000;
         }
 
@@ -361,9 +365,12 @@
             border-radius: 15px;
             padding: 40px;
             max-width: 700px;
+            width: 100%;                          /* 모바일에서 양옆 꽉 차게 */
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             animation: slideIn 0.5s ease-out;
+            max-height: calc(100vh - 40px);       /* 🔑 화면 높이 - 여백 만큼만 */
+            overflow-y: auto;                     /* 내용이 넘치면 카드 안에서 스크롤 */
         }
 
         @keyframes slideIn {
