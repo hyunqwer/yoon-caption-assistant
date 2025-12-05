@@ -10,6 +10,7 @@
     "deploy": "vercel --prod"
   },
   "dependencies": {
+    "@vercel/speed-insights": "^1.0.0",
     "openai": "^4.20.1"
   },
   "devDependencies": {
